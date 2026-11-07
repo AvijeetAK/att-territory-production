@@ -18,7 +18,7 @@ interface MapCanvasProps {
   onSelectMarker: (business: Business) => void;
 }
 
-type MapLayerType = "voyager" | "positron" | "satellite";
+type MapLayerType = "street" | "topo" | "satellite";
 
 export default function MapCanvas({
   center,
@@ -32,7 +32,7 @@ export default function MapCanvas({
   const activeTileLayerRef = useRef<any>(null);
   const markersLayerGroupRef = useRef<any>(null);
 
-  const [activeLayer, setActiveLayer] = useState<MapLayerType>("voyager");
+  const [activeLayer, setActiveLayer] = useState<MapLayerType>("street");
   const [isLeafletReady, setIsLeafletReady] = useState(false);
 
   // 1. Ensure Leaflet is loaded in browser
@@ -54,30 +54,31 @@ export default function MapCanvas({
     return () => clearInterval(interval);
   }, []);
 
-  // Helper to get tile layer definition
+  // Helper to get key-free, watermark-free tile layer definition
   const getTileLayer = (L: any, layerType: MapLayerType) => {
-    if (layerType === "voyager") {
+    if (layerType === "street") {
+      // 100% key-free Esri World Street Map with subtle warm architectural paper filter
       return L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
         {
           attribution:
-            '&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          subdomains: "abcd",
-          maxZoom: 20,
-          className: "carto-voyager-paper",
+            "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, TomTom",
+          maxZoom: 19,
+          className: "esri-street-paper",
         }
       );
-    } else if (layerType === "positron") {
+    } else if (layerType === "topo") {
+      // 100% key-free Esri World Topographic Map
       return L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
         {
           attribution:
-            '&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          subdomains: "abcd",
-          maxZoom: 20,
+            "Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri",
+          maxZoom: 19,
         }
       );
     } else {
+      // 100% key-free Esri World Satellite & Aerial Imagery
       return L.tileLayer(
         "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         {
@@ -265,27 +266,27 @@ export default function MapCanvas({
       <div className="absolute right-6 bottom-6 z-10 flex items-center bg-[#FAF7F2] border-[1.5px] border-[#DED6C6] rounded-lg p-1.5 shadow-cutout">
         <div className="flex items-center gap-1 text-xs font-semibold">
           <button
-            onClick={() => setActiveLayer("voyager")}
+            onClick={() => setActiveLayer("street")}
             className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-all ${
-              activeLayer === "voyager"
+              activeLayer === "street"
                 ? "bg-[#C84B31] text-[#FAF7F2] shadow-stamp-pressed font-bold"
                 : "text-[#655E54] hover:bg-[#E8E2D5] hover:text-[#1C1917]"
             }`}
           >
             <Compass className="w-3.5 h-3.5" />
-            <span>Warm Editorial</span>
+            <span>Editorial Street</span>
           </button>
 
           <button
-            onClick={() => setActiveLayer("positron")}
+            onClick={() => setActiveLayer("topo")}
             className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-all ${
-              activeLayer === "positron"
+              activeLayer === "topo"
                 ? "bg-[#C84B31] text-[#FAF7F2] shadow-stamp-pressed font-bold"
                 : "text-[#655E54] hover:bg-[#E8E2D5] hover:text-[#1C1917]"
             }`}
           >
             <Globe className="w-3.5 h-3.5" />
-            <span>Architectural Light</span>
+            <span>Clean Topographic</span>
           </button>
 
           <button

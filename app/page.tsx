@@ -42,6 +42,11 @@ export default function AppHome() {
   // Legal & Provenance Shield Modal
   const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
 
+  // Synchronized Filter State (Shared between LeftDrawer and MapCanvas)
+  const [ispFilter, setIspFilter] = useState<"ALL" | "ATT_ONLY" | "NON_ATT_ONLY">("ALL");
+  const [selectedTiers, setSelectedTiers] = useState<string[]>(["MICRO", "SMALL", "MEDIUM", "LARGE"]);
+  const [searchQuery, setSearchQuery] = useState("");
+
   // Fetch live API data on mount (with automatic fallback to embedded clean-room seed data)
   useEffect(() => {
     async function loadData() {
@@ -92,6 +97,31 @@ export default function AppHome() {
     });
   }, [allBusinesses, isState1Open, selectedSubSubRegion, selectedRegion]);
 
+  // Businesses strictly filtered by ISP filter + Size Tiers + Search Query
+  // Synchronized in real time between Left Drawer and Right Map Canvas
+  const filteredBusinesses = React.useMemo(() => {
+    return activeSubSubBusinesses.filter((b) => {
+      // 1. ISP filter
+      if (ispFilter === "ATT_ONLY" && !b.is_att_customer) return false;
+      if (ispFilter === "NON_ATT_ONLY" && b.is_att_customer) return false;
+
+      // 2. Tier filter
+      if (!selectedTiers.includes(b.size_tier)) return false;
+
+      // 3. Search query
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        const matchesName = b.business_name.toLowerCase().includes(q);
+        const matchesCategory = b.industry_category.toLowerCase().includes(q);
+        const matchesMall = b.parent_mall_name?.toLowerCase().includes(q);
+        const matchesIsp = b.current_isp_name.toLowerCase().includes(q);
+        if (!matchesName && !matchesCategory && !matchesMall && !matchesIsp) return false;
+      }
+
+      return true;
+    });
+  }, [activeSubSubBusinesses, ispFilter, selectedTiers, searchQuery]);
+
   // Transition from State 1 to State 2
   const handleAnalyzeTerritory = (
     subSub: SubSubRegion,
@@ -101,6 +131,11 @@ export default function AppHome() {
     setSelectedRegion(reg);
     setSelectedSubRegion(sub);
     setSelectedSubSubRegion(subSub);
+
+    // Reset filters to full view for newly selected territory
+    setIspFilter("ALL");
+    setSelectedTiers(["MICRO", "SMALL", "MEDIUM", "LARGE"]);
+    setSearchQuery("");
 
     // Zoom real map smoothly into sub-sub-region coordinates
     setMapCenter({ lat: subSub.center_lat, lng: subSub.center_lng });
@@ -131,7 +166,7 @@ export default function AppHome() {
       {/* Top Application Header: Stitched Cream Cardstock */}
       <header className="h-14 border-b-[1.5px] border-[#DED6C6] bg-[#FAF7F2] px-5 flex items-center justify-between z-40 shrink-0 shadow-sm">
         <div className="flex items-center space-x-3">
-          {/* Terracotta / Cerulean Stamp Monogram */}
+          {/* Terracotta Stamp Monogram */}
           <div className="h-9 w-9 rounded-lg bg-[#C84B31] border-[1.5px] border-[#8F2D19] flex items-center justify-center font-serif font-bold text-white text-xs shadow-stamp-pressed tracking-wider">
             AT&amp;T
           </div>
@@ -170,7 +205,7 @@ export default function AppHome() {
           <MapCanvas
             center={mapCenter}
             zoom={mapZoom}
-            markers={isState1Open ? allBusinesses.slice(0, 30) : activeSubSubBusinesses}
+            markers={isState1Open ? allBusinesses.slice(0, 30) : filteredBusinesses}
             selectedMarkerId={selectedBusiness?.overture_gers_id || null}
             onSelectMarker={handleSelectBusiness}
           />
@@ -182,7 +217,18 @@ export default function AppHome() {
             region={selectedRegion}
             subRegion={selectedSubRegion}
             subSubRegion={selectedSubSubRegion}
-            businesses={activeSubSubBusinesses}
+            allSubSubBusinesses={activeSubSubBusinesses}
+            filteredBusinesses={filteredBusinesses}
+            ispFilter={ispFilter}
+            onIspFilterChange={setIspFilter}
+            selectedTiers={selectedTiers}
+            onToggleTier={(tier) => {
+              setSelectedTiers((prev) =>
+                prev.includes(tier) ? prev.filter((t) => t !== tier) : [...prev, tier]
+              );
+            }}
+            searchQuery={searchQuery}
+            onSearchQueryChange={setSearchQuery}
             selectedBusinessId={selectedBusiness?.overture_gers_id || null}
             onSelectBusiness={handleSelectBusiness}
             onChangeRegion={handleChangeRegion}

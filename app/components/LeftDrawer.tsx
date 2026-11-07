@@ -1,24 +1,26 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React from "react";
 import { Business, RegionState, SubRegion, SubSubRegion } from "../types";
 import {
   ChevronRight,
-  Filter,
   Search,
   RotateCcw,
   Building2,
-  Wifi,
-  Zap,
-  Check,
-  Compass,
 } from "lucide-react";
 
 interface LeftDrawerProps {
   region: RegionState;
   subRegion: SubRegion;
   subSubRegion: SubSubRegion;
-  businesses: Business[];
+  allSubSubBusinesses: Business[];
+  filteredBusinesses: Business[];
+  ispFilter: "ALL" | "ATT_ONLY" | "NON_ATT_ONLY";
+  onIspFilterChange: (filter: "ALL" | "ATT_ONLY" | "NON_ATT_ONLY") => void;
+  selectedTiers: string[];
+  onToggleTier: (tier: string) => void;
+  searchQuery: string;
+  onSearchQueryChange: (query: string) => void;
   selectedBusinessId: string | null;
   onSelectBusiness: (business: Business) => void;
   onChangeRegion: () => void;
@@ -28,45 +30,22 @@ export default function LeftDrawer({
   region,
   subRegion,
   subSubRegion,
-  businesses,
+  allSubSubBusinesses,
+  filteredBusinesses,
+  ispFilter,
+  onIspFilterChange,
+  selectedTiers,
+  onToggleTier,
+  searchQuery,
+  onSearchQueryChange,
   selectedBusinessId,
   onSelectBusiness,
   onChangeRegion,
 }: LeftDrawerProps) {
-  // Filters State
-  const [ispFilter, setIspFilter] = useState<"ALL" | "ATT_ONLY" | "NON_ATT_ONLY">("ALL");
-  const [selectedTiers, setSelectedTiers] = useState<string[]>(["MICRO", "SMALL", "MEDIUM", "LARGE"]);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const toggleTier = (tier: string) => {
-    setSelectedTiers((prev) =>
-      prev.includes(tier) ? prev.filter((t) => t !== tier) : [...prev, tier]
-    );
-  };
-
-  // Filter businesses
-  const filteredBusinesses = useMemo(() => {
-    return businesses.filter((b) => {
-      // ISP filter
-      if (ispFilter === "ATT_ONLY" && !b.is_att_customer) return false;
-      if (ispFilter === "NON_ATT_ONLY" && b.is_att_customer) return false;
-
-      // Tier filter
-      if (!selectedTiers.includes(b.size_tier)) return false;
-
-      // Search query
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        const matchesName = b.business_name.toLowerCase().includes(q);
-        const matchesCategory = b.industry_category.toLowerCase().includes(q);
-        const matchesMall = b.parent_mall_name?.toLowerCase().includes(q);
-        const matchesIsp = b.current_isp_name.toLowerCase().includes(q);
-        if (!matchesName && !matchesCategory && !matchesMall && !matchesIsp) return false;
-      }
-
-      return true;
-    });
-  }, [businesses, ispFilter, selectedTiers, searchQuery]);
+  // Counts derived from the active sub-sub-region
+  const totalCount = allSubSubBusinesses.length;
+  const attCount = allSubSubBusinesses.filter((b) => Boolean(b.is_att_customer)).length;
+  const nonAttCount = allSubSubBusinesses.filter((b) => !b.is_att_customer).length;
 
   return (
     <aside className="w-[400px] h-full flex flex-col bg-[#FAF7F2] border-r-[1.5px] border-[#DED6C6] shadow-cutout-lg z-20 select-none">
@@ -98,7 +77,7 @@ export default function LeftDrawer({
             {subSubRegion.name}
           </h2>
           <span className="text-xs font-mono font-bold text-[#655E54] bg-[#E8E2D5] px-2 py-0.5 rounded border border-[#DED6C6]">
-            {filteredBusinesses.length} POIs
+            {filteredBusinesses.length} Active Pins
           </span>
         </div>
 
@@ -109,47 +88,61 @@ export default function LeftDrawer({
             type="text"
             placeholder="Search business, mall kiosk, NAICS..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => onSearchQueryChange(e.target.value)}
             className="w-full bg-[#E8E2D5] border border-[#DED6C6] rounded-md pl-9 pr-3 py-1.5 text-xs text-[#1C1917] placeholder-[#9C9488] font-medium focus:outline-none focus:border-[#C84B31] shadow-inner transition-colors"
           />
         </div>
 
-        {/* ISP Segmented Filter Track */}
+        {/* Target Leads & ISP Segmented Filter Track */}
         <div className="cutout-well p-1 rounded-md flex items-center gap-1 text-[11px] font-semibold">
+          {/* Button 1: All Businesses */}
           <button
-            onClick={() => setIspFilter("ALL")}
-            className={`flex-1 py-1 rounded transition-all text-center ${
+            onClick={() => onIspFilterChange("ALL")}
+            className={`flex-1 py-1.5 px-1 rounded transition-all text-center ${
               ispFilter === "ALL"
                 ? "bg-[#FAF7F2] text-[#1C1917] shadow-cutout-sm font-bold border border-[#DED6C6]"
                 : "text-[#655E54] hover:text-[#1C1917]"
             }`}
           >
-            All ({businesses.length})
+            All ({totalCount})
           </button>
 
+          {/* Button 2: Using AT&T */}
           <button
-            onClick={() => setIspFilter("ATT_ONLY")}
-            className={`flex-1 py-1 rounded transition-all text-center flex items-center justify-center gap-1 ${
+            onClick={() => onIspFilterChange("ATT_ONLY")}
+            className={`flex-1 py-1.5 px-1 rounded transition-all text-center flex items-center justify-center gap-1 ${
               ispFilter === "ATT_ONLY"
                 ? "bg-[#0077B6] text-[#FAF7F2] shadow-sm font-bold"
                 : "text-[#0077B6] hover:bg-[#E8E2D5]"
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-[#0077B6] inline-block border border-white" />
-            <span>On-Net</span>
+            <span>Using AT&amp;T ({attCount})</span>
           </button>
 
+          {/* Button 3: Target Leads */}
           <button
-            onClick={() => setIspFilter("NON_ATT_ONLY")}
-            className={`flex-1 py-1 rounded transition-all text-center ${
+            onClick={() => onIspFilterChange("NON_ATT_ONLY")}
+            className={`flex-1 py-1.5 px-1 rounded transition-all text-center flex flex-col items-center justify-center ${
               ispFilter === "NON_ATT_ONLY"
                 ? "bg-[#C84B31] text-[#FAF7F2] shadow-sm font-bold"
-                : "text-[#655E54] hover:text-[#1C1917]"
+                : "text-[#C84B31] hover:bg-[#E8E2D5]"
             }`}
+            title="Not Using AT&T — Ready to Pitch"
           >
-            Competitors
+            <div className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-[#C84B31] inline-block border border-white" />
+              <span>Target Leads ({nonAttCount})</span>
+            </div>
           </button>
         </div>
+
+        {/* Active Filter Subtitle Indicator */}
+        {ispFilter === "NON_ATT_ONLY" && (
+          <div className="text-[10px] font-mono text-[#C84B31] bg-[#FDF2E9] px-2 py-0.5 rounded border border-[#FADBD8] text-center font-bold">
+            Target Leads Only — Zero AT&amp;T Pins Rendered
+          </div>
+        )}
 
         {/* Size Tier Chips */}
         <div className="flex items-center gap-1.5 pt-0.5">
@@ -163,7 +156,7 @@ export default function LeftDrawer({
             return (
               <button
                 key={t.id}
-                onClick={() => toggleTier(t.id)}
+                onClick={() => onToggleTier(t.id)}
                 className={`flex-1 py-1 px-1.5 rounded text-[10px] font-mono font-bold tracking-tight border transition-all flex items-center justify-center gap-1 ${
                   isSelected
                     ? "bg-[#FAF7F2] text-[#1C1917] border-[#DED6C6] shadow-cutout-sm"
@@ -228,13 +221,14 @@ export default function LeftDrawer({
                         <span className="font-bold text-sm text-[#1C1917] truncate leading-tight group-hover:text-[#C84B31] transition-colors">
                           {b.business_name}
                         </span>
+                        {/* Commercial Status Badges: AT&T CONNECTED vs TARGET LEAD */}
                         {b.is_att_customer ? (
                           <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-[#E8F4FC] text-[#0077B6] border border-[#BDE0FE]">
-                            AT&T ON-NET
+                            AT&amp;T CONNECTED
                           </span>
                         ) : (
-                          <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-[#E8E2D5] text-[#655E54] border border-[#DED6C6]">
-                            OFF-NET
+                          <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-[#FDF2E9] text-[#C84B31] border border-[#FADBD8]">
+                            TARGET LEAD
                           </span>
                         )}
                       </div>
