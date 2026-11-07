@@ -1,0 +1,47 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Next.js build output
+/.next/
+/out/
+/build
+
+# Production
+/dist
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Local environment variables
+.env*.local
+.env
+
+# Vercel deployment metadata
+.vercel
+
+# TypeScript build info
+*.tsbuildinfo
+next-env.d.ts
+
+# OS metadata
+.DS_Store
+*.pem
+Thumbs.db
+
+# Python bytecode & temporary databases
+__pycache__/
+*.py[cod]
+*$py.class
+*.db
+*.sqlite3
+
+# Local shell and script utilities
+*.bat
+*.ps1
+
+

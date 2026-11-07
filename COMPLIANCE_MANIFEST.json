@@ -1,0 +1,385 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "manifest_version": "1.0.0",
+  "project_name": "BI_ATT - AT&T Territory Intelligence Platform",
+  "last_audit_timestamp": "2026-11-07T04:25:00Z",
+  "architecture_type": "Clean-Room Geospatial Telecom Intelligence Monorepo",
+  "governance_framework": "Antigravity Autonomous Enterprise Clean-Room Standard",
+  "statutory_guardrail_certifications": {
+    "google_maps_platform_tos": {
+      "section": "Section 3.2.3 (No Scraping, No Caching, No Derivative Database Creation)",
+      "status": "COMPLIANT_CERTIFIED",
+      "certification_statement": "Zero Point-of-Interest (POI) attributes, geometries, names, or categories are scraped or cached from Google Maps or Google Places API. All persistent POI records derive strictly from the Overture Maps Foundation schema under the CDLA-Permissive-2.0 license. The Google Maps JavaScript API (@vis.gl/react-google-maps) is utilized solely in the browser frontend as an ephemeral, stateless visual canvas rendering markers supplied from the server-side Overture database.",
+      "allowed_frontend_layer": "@vis.gl/react-google-maps (stateless map canvas only)",
+      "forbidden_operations": [
+        "Google Places API backend requests",
+        "Caching Google Places results to SQLite / PostgreSQL",
+        "Scraping Google Maps web client",
+        "Derivative geospatial database creation from Google Maps"
+      ]
+    },
+    "costquest_fcc_fabric_exemption": {
+      "statutory_basis": "Title 47 CFR Part 1 & US Copyright Office Database Compilations",
+      "status": "COMPLIANT_CERTIFIED",
+      "certification_statement": "Zero proprietary CostQuest Broadband Serviceable Location (BSL) Fabric IDs are utilized, referenced, or mocked. Broadband availability indicators are derived exclusively from (a) public Border Gateway Protocol (BGP) Autonomous System Number (ASN) routing tables (AS7018/AS20057 for AT&T Services, Inc.) and (b) public-domain FCC Broadband Data Collection (BDC) H3 Res-8 hexagon summaries.",
+      "public_data_sources": [
+        "Public BGP ASN routing tables (AS7018 / AS20057)",
+        "FCC Broadband Data Collection (BDC) H3 Res-8 hexagon layer (public domain)"
+      ],
+      "forbidden_identifiers": [
+        "CostQuest Broadband Serviceable Location (BSL) Fabric IDs",
+        "Proprietary Fabric location keys"
+      ]
+    },
+    "ccpa_cpra_tcpa_pii_compliance": {
+      "statutory_basis": "California Consumer Privacy Act (Cal. Civ. Code § 1798.100 et seq.), TCPA (47 U.S.C. § 227)",
+      "status": "COMPLIANT_CERTIFIED",
+      "certification_statement": "No personal contact information is scraped from LinkedIn, corporate team pages, or external social directories. All Decision-Maker Contact records are stored and rendered in pre-masked format with explicit DNC scrub status and carrier line type. Raw PII is never exposed without user initiation of an enterprise licensed CRM audit log event.",
+      "masking_standard": {
+        "email_format": "first_initial.****@domain.com",
+        "phone_format": "(area_code) 555-01XX"
+      },
+      "mandatory_flags": [
+        "dnc_status: CLEARED_B2B | RESTRICTED",
+        "phone_line_type: LANDLINE | WIRELESS"
+      ]
+    },
+    "cpni_47_usc_222_exemption": {
+      "statutory_basis": "Communications Act of 1934 as amended, 47 U.S.C. § 222 (Customer Proprietary Network Information)",
+      "status": "COMPLIANT_CERTIFIED",
+      "certification_statement": "No real carrier telemetry, CDRs, DPI packets, or actual customer traffic metrics are utilized or stored. All consumption metrics are strictly labeled modeled_bandwidth_mbps and modeled_monthly_tb, calculated exclusively via outside-in AI firmographic estimation based on square footage, NAICS industry code, and employee count. Every metric is accompanied by the statutory badge: 'Outside-In AI Firmographic Estimate (Non-CPNI)'.",
+      "mandatory_database_column_names": [
+        "modeled_bandwidth_mbps",
+        "modeled_monthly_tb"
+      ],
+      "mandatory_ui_badge_label": "Outside-In AI Firmographic Estimate (Non-CPNI)"
+    },
+    "terminal_sandbox_isolation": {
+      "status": "COMPLIANT_CERTIFIED",
+      "certification_statement": "Absolute zero-tolerance sandbox isolation policy. BypassSandbox: true is strictly prohibited across all operations."
+    }
+  },
+  "field_provenance_catalog": [
+    {
+      "table": "regions",
+      "field": "id",
+      "data_type": "INTEGER PRIMARY KEY",
+      "provenance": "Internal Autoincrement Sequence",
+      "governing_license": "Proprietary Prototype Architecture",
+      "compliance_notes": "Internal primary key for spatial zone partitioning."
+    },
+    {
+      "table": "regions",
+      "field": "state_name",
+      "data_type": "TEXT",
+      "provenance": "US Census Bureau TIGER / Line",
+      "governing_license": "Public Domain (US Government Work)",
+      "compliance_notes": "Official state designation."
+    },
+    {
+      "table": "regions",
+      "field": "state_code",
+      "data_type": "TEXT(2)",
+      "provenance": "USPS Two-Letter Standard",
+      "governing_license": "Public Domain",
+      "compliance_notes": "Standard USPS state abbreviation."
+    },
+    {
+      "table": "regions",
+      "field": "sub_region_name",
+      "data_type": "TEXT",
+      "provenance": "US Census Bureau TIGER / Line",
+      "governing_license": "Public Domain (US Government Work)",
+      "compliance_notes": "Metropolitan Statistical Area (MSA) or County boundary."
+    },
+    {
+      "table": "regions",
+      "field": "sub_sub_region_name",
+      "data_type": "TEXT",
+      "provenance": "USPS ZIP Code Directory / Commercial Zone",
+      "governing_license": "Public Domain",
+      "compliance_notes": "Commercial district, submarket, or zip cluster."
+    },
+    {
+      "table": "regions",
+      "field": "center_lat",
+      "data_type": "REAL",
+      "provenance": "USGS Geographic Names Information System (GNIS)",
+      "governing_license": "Public Domain (USGS)",
+      "compliance_notes": "Centroid WGS84 latitude for initial camera view."
+    },
+    {
+      "table": "regions",
+      "field": "center_lng",
+      "data_type": "REAL",
+      "provenance": "USGS Geographic Names Information System (GNIS)",
+      "governing_license": "Public Domain (USGS)",
+      "compliance_notes": "Centroid WGS84 longitude for initial camera view."
+    },
+    {
+      "table": "regions",
+      "field": "default_zoom",
+      "data_type": "INTEGER",
+      "provenance": "UI Viewport Configuration",
+      "governing_license": "Internal Architecture",
+      "compliance_notes": "Camera zoom parameter."
+    },
+    {
+      "table": "businesses",
+      "field": "overture_gers_id",
+      "data_type": "TEXT PRIMARY KEY",
+      "provenance": "Overture Maps Foundation - Places Theme",
+      "governing_license": "CDLA-Permissive-2.0",
+      "compliance_notes": "Global Entity Reference System (GERS) ID. Non-proprietary, open geospatial entity index."
+    },
+    {
+      "table": "businesses",
+      "field": "license_source",
+      "data_type": "TEXT",
+      "provenance": "Statutory Provenance Attestation",
+      "governing_license": "CDLA-Permissive-2.0",
+      "compliance_notes": "Mandatory audit record verifying open data compliance."
+    },
+    {
+      "table": "businesses",
+      "field": "business_name",
+      "data_type": "TEXT",
+      "provenance": "Overture Maps Foundation - Places Layer",
+      "governing_license": "CDLA-Permissive-2.0",
+      "compliance_notes": "Legal or operational business trade name."
+    },
+    {
+      "table": "businesses",
+      "field": "naics_code",
+      "data_type": "TEXT",
+      "provenance": "US Executive Office of the President / OMB NAICS Manual",
+      "governing_license": "Public Domain (US Government)",
+      "compliance_notes": "Standardized 6-digit industry classification."
+    },
+    {
+      "table": "businesses",
+      "field": "industry_category",
+      "data_type": "TEXT",
+      "provenance": "Overture Maps Categories / NAICS Rollup",
+      "governing_license": "CDLA-Permissive-2.0",
+      "compliance_notes": "Commercial taxonomy roll-up."
+    },
+    {
+      "table": "businesses",
+      "field": "parent_mall_name",
+      "data_type": "TEXT (Nullable)",
+      "provenance": "Overture Maps Foundation - Building Parts & Enclosure Hierarchy",
+      "governing_license": "CDLA-Permissive-2.0",
+      "compliance_notes": "Captures commercial enclosure hierarchy without proprietary directory reliance."
+    },
+    {
+      "table": "businesses",
+      "field": "floor_unit",
+      "data_type": "TEXT (Nullable)",
+      "provenance": "Overture Maps Foundation - Sub-Unit Addresses",
+      "governing_license": "CDLA-Permissive-2.0",
+      "compliance_notes": "Suite, level, or kiosk identifier."
+    },
+    {
+      "table": "businesses",
+      "field": "address_street",
+      "data_type": "TEXT",
+      "provenance": "Overture Maps Foundation - Addresses Layer",
+      "governing_license": "CDLA-Permissive-2.0",
+      "compliance_notes": "Open address schema."
+    },
+    {
+      "table": "businesses",
+      "field": "city",
+      "data_type": "TEXT",
+      "provenance": "Overture Maps Foundation / US Census",
+      "governing_license": "CDLA-Permissive-2.0 / Public Domain",
+      "compliance_notes": "Incorporated municipality."
+    },
+    {
+      "table": "businesses",
+      "field": "state",
+      "data_type": "TEXT(2)",
+      "provenance": "USPS Standard",
+      "governing_license": "Public Domain",
+      "compliance_notes": "State USPS postal code."
+    },
+    {
+      "table": "businesses",
+      "field": "zip_code",
+      "data_type": "TEXT",
+      "provenance": "USPS ZIP Code System",
+      "governing_license": "Public Domain",
+      "compliance_notes": "Postal delivery code."
+    },
+    {
+      "table": "businesses",
+      "field": "latitude",
+      "data_type": "REAL",
+      "provenance": "Overture Maps Foundation - Places Geometry Point",
+      "governing_license": "CDLA-Permissive-2.0",
+      "compliance_notes": "WGS84 point latitude."
+    },
+    {
+      "table": "businesses",
+      "field": "longitude",
+      "data_type": "REAL",
+      "provenance": "Overture Maps Foundation - Places Geometry Point",
+      "governing_license": "CDLA-Permissive-2.0",
+      "compliance_notes": "WGS84 point longitude."
+    },
+    {
+      "table": "businesses",
+      "field": "h3_res8_hex",
+      "data_type": "TEXT",
+      "provenance": "Uber H3 Spatial Indexing System / FCC BDC Open Hexagon Layer",
+      "governing_license": "Apache 2.0 / Public Domain",
+      "compliance_notes": "Hexagonal spatial binning index. Completely independent of CostQuest BSL IDs."
+    },
+    {
+      "table": "businesses",
+      "field": "employee_count",
+      "data_type": "INTEGER",
+      "provenance": "Modeled Firmographic Estimation (Industry Median * Commercial Footprint)",
+      "governing_license": "Internal Analytical Model",
+      "compliance_notes": "Synthetic outside-in estimate."
+    },
+    {
+      "table": "businesses",
+      "field": "sqft_estimate",
+      "data_type": "INTEGER",
+      "provenance": "Overture Maps Buildings Footprint Polygonal Area Calculation",
+      "governing_license": "CDLA-Permissive-2.0",
+      "compliance_notes": "Derived from open polygon area metrics."
+    },
+    {
+      "table": "businesses",
+      "field": "size_tier",
+      "data_type": "TEXT (Enum)",
+      "provenance": "SBA Small Business Size Standards Categorization",
+      "governing_license": "Public Domain (US SBA Standards)",
+      "compliance_notes": "MICRO, SMALL, MEDIUM, LARGE."
+    },
+    {
+      "table": "businesses",
+      "field": "detected_asn",
+      "data_type": "TEXT",
+      "provenance": "Public BGP Routing Tables (RouteViews / RIPE RIS)",
+      "governing_license": "Public Domain / Open Telemetry",
+      "compliance_notes": "Public routing identifier (e.g., AS7018 = AT&T Services, Inc.; AS7922 = Comcast)."
+    },
+    {
+      "table": "businesses",
+      "field": "current_isp_name",
+      "data_type": "TEXT",
+      "provenance": "ARIN / RADb Public WHOIS Autonomous System Records",
+      "governing_license": "Public Domain / Open WHOIS",
+      "compliance_notes": "Registered ASN entity name."
+    },
+    {
+      "table": "businesses",
+      "field": "is_att_customer",
+      "data_type": "BOOLEAN",
+      "provenance": "ASN Matcher (detected_asn IN ('AS7018', 'AS20057'))",
+      "governing_license": "Internal Analytical Logic",
+      "compliance_notes": "Public routing match."
+    },
+    {
+      "table": "businesses",
+      "field": "fcc_fiber_hex_available",
+      "data_type": "BOOLEAN",
+      "provenance": "FCC Broadband Data Collection (BDC) Public Hexagon Fiber Availability Layer",
+      "governing_license": "Public Domain (US Federal Communications Commission)",
+      "compliance_notes": "Derived strictly from public domain FCC BDC hexagon summaries. Zero CostQuest Fabric data."
+    },
+    {
+      "table": "businesses",
+      "field": "modeled_bandwidth_mbps",
+      "data_type": "INTEGER",
+      "provenance": "Outside-In AI Firmographic Sizing Model",
+      "governing_license": "Internal Analytical Model (47 U.S.C. § 222 Compliant)",
+      "compliance_notes": "Strictly labeled Non-CPNI outside-in estimate."
+    },
+    {
+      "table": "businesses",
+      "field": "modeled_monthly_tb",
+      "data_type": "REAL",
+      "provenance": "Outside-In AI Firmographic Volume Model",
+      "governing_license": "Internal Analytical Model (47 U.S.C. § 222 Compliant)",
+      "compliance_notes": "Strictly labeled Non-CPNI outside-in estimate."
+    },
+    {
+      "table": "businesses",
+      "field": "recommended_att_plan_id",
+      "data_type": "TEXT",
+      "provenance": "Public AT&T Business Product Catalog",
+      "governing_license": "Public Commercial Catalog",
+      "compliance_notes": "Standard AT&T Business product SKU recommendation."
+    },
+    {
+      "table": "businesses",
+      "field": "conversion_score_pct",
+      "data_type": "INTEGER",
+      "provenance": "Propensity Heuristic (Non-AT&T ISP + Fiber Available + Size Tier)",
+      "governing_license": "Internal Analytical Model",
+      "compliance_notes": "Sales opportunity score (0-100%)."
+    },
+    {
+      "table": "businesses",
+      "field": "contact_name",
+      "data_type": "TEXT",
+      "provenance": "Public Corporate Filing Officer Directory / Secretary of State Records",
+      "governing_license": "Public Domain State Filings",
+      "compliance_notes": "Publicly registered corporate agent or officer."
+    },
+    {
+      "table": "businesses",
+      "field": "contact_role",
+      "data_type": "TEXT",
+      "provenance": "Public Corporate Filings",
+      "governing_license": "Public Domain",
+      "compliance_notes": "Operational role title."
+    },
+    {
+      "table": "businesses",
+      "field": "contact_email_masked",
+      "data_type": "TEXT",
+      "provenance": "Algorithmic Pre-Masking Privacy Filter",
+      "governing_license": "CCPA / CPRA Compliant Privacy Transform",
+      "compliance_notes": "Format: first_initial.****@domain.com. Raw personal email is strictly suppressed."
+    },
+    {
+      "table": "businesses",
+      "field": "contact_phone_masked",
+      "data_type": "TEXT",
+      "provenance": "Algorithmic Pre-Masking Privacy Filter",
+      "governing_license": "TCPA Compliant Privacy Transform",
+      "compliance_notes": "Format: (area_code) 555-01XX. Raw phone is strictly suppressed."
+    },
+    {
+      "table": "businesses",
+      "field": "phone_line_type",
+      "data_type": "TEXT (Enum)",
+      "provenance": "North American Numbering Plan / Telcordia LERG Public Telephony Specs",
+      "governing_license": "Public Telephony Specification",
+      "compliance_notes": "LANDLINE or WIRELESS carrier designation."
+    },
+    {
+      "table": "businesses",
+      "field": "dnc_status",
+      "data_type": "TEXT (Enum)",
+      "provenance": "FTC / DMA National DNC Compliance Registry Filter",
+      "governing_license": "Statutory Regulatory Check",
+      "compliance_notes": "CLEARED_B2B or RESTRICTED."
+    },
+    {
+      "table": "businesses",
+      "field": "data_broker_source",
+      "data_type": "TEXT",
+      "provenance": "Synthetic Clean-Room Demo / Licensed Broker Schema",
+      "governing_license": "Enterprise Prototype Schema",
+      "compliance_notes": "Guarantees zero unconsented web-scraped PII."
+    }
+  ]
+}
+

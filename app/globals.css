@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper-surface: #F3EFE6;
+  --paper-card: #FAF7F2;
+  --paper-recessed: #E8E2D5;
+  --paper-border: #DED6C6;
+  --paper-shadow: #D5CCB9;
+  --ink-primary: #1C1917;
+  --ink-muted: #655E54;
+  --terracotta: #C84B31;
+  --terracotta-dark: #8F2D19;
+}
+
+body {
+  color: var(--ink-primary);
+  background-color: var(--paper-surface);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Subtle SVG architectural paper grain texture */
+.paper-grain-bg {
+  background-color: #F3EFE6;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+/* CARTO Voyager Warm Paper Tile Filter */
+.leaflet-tile-pane .carto-voyager-paper {
+  filter: sepia(0.12) contrast(1.03) brightness(0.99);
+}
+
+/* Tactile Paper-Cutout Physical Shadows & Surfaces */
+.cutout-card {
+  background-color: #FAF7F2;
+  border: 1.5px solid #DED6C6;
+  box-shadow: 4px 5px 0px #D5CCB9, 0 10px 20px rgba(45, 38, 30, 0.08);
+}
+
+.cutout-card-lg {
+  background-color: #FAF7F2;
+  border: 1.5px solid #DED6C6;
+  box-shadow: 6px 8px 0px #D5CCB9, 0 15px 30px rgba(45, 38, 30, 0.12);
+}
+
+.cutout-well {
+  background-color: #E8E2D5;
+  border: 1px solid #DED6C6;
+  box-shadow: inset 2px 2px 5px rgba(45, 38, 30, 0.12), inset -2px -2px 4px rgba(255, 255, 255, 0.7);
+}
+
+.terracotta-btn {
+  background-color: #C84B31;
+  color: #FAF7F2;
+  border: 1.5px solid #8F2D19;
+  box-shadow: 0 3px 0 #8F2D19, 0 6px 12px rgba(143, 45, 25, 0.25);
+  transition: all 0.15s ease-in-out;
+}
+
+.terracotta-btn:hover {
+  background-color: #DF654B;
+  box-shadow: 0 4px 0 #8F2D19, 0 8px 16px rgba(143, 45, 25, 0.3);
+}
+
+.terracotta-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #8F2D19, 0 2px 4px rgba(143, 45, 25, 0.2);
+}
+
+/* Custom Die-Cut Paper Tack Pin for Leaflet */
+.paper-pin-wrapper {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.paper-pin-wrapper:hover {
+  transform: scale(1.15) translateY(-3px);
+  z-index: 9999 !important;
+}
+
+.paper-pin-selected {
+  transform: scale(1.22) translateY(-4px);
+  z-index: 10000 !important;
+}
+
+.paper-tack-pin {
+  width: 32px;
+  height: 38px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 4px 8px rgba(28, 25, 23, 0.35));
+}
+
+.paper-tack-body {
+  width: 28px;
+  height: 28px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  border: 3px solid #FAF7F2;
+  box-shadow: 0 2px 4px rgba(28, 25, 23, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 2px;
+}
+
+.paper-tack-core {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: rotate(45deg);
+  background-color: #FAF7F2;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Custom Scrollbars in Warm Cardstock Palette */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #E8E2D5;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb {
+  background: #DED6C6;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C4BAA9;
+}
