@@ -12,18 +12,18 @@
 
 The **AT&T Territory Intelligence Platform** is an enterprise-grade, clean-room geospatial sales intelligence application built for telecom sales executives, commercial account managers, and territory planners. It bridges the gap between public geospatial datasets, BGP routing telemetry, and deterministic outside-in commercial fiber demand modeling.
 
-The application operates with zero runtime dependency on external databases or local Python runtimes, packaging a **100% serverless Next.js App Router architecture** with an interactive **Tactile Paper Cutout & Architectural Cartography** interface and live street/satellite cartography.
+The application operates with zero runtime dependency on external databases or local Python runtimes, packaging a **100% serverless Next.js App Router architecture** with an interactive tactile cardstock interface and live street/satellite cartography.
 
 ---
 
 ## Architectural Highlights
 
 - **Zero-Config Serverless Deployment**: Fully self-contained Next.js 14 App Router application deployed with one click to Vercel, AWS Amplify, or Docker.
-- **Tactile Paper Cutout Design System**: Physical architectural cardstock palette (`#F3EFE6`, `#FAF7F2`), stacked paper edge borders (`1.5px solid #DED6C6`), layered drop shadows, terracotta action stamps (`#C84B31`), and editorial typography (`Fraunces`, `Plus Jakarta Sans`, `JetBrains Mono`).
+- **Tactile Cardstock Design System**: Physical architectural cardstock palette (`#F3EFE6`, `#FAF7F2`), stacked paper edge borders (`1.5px solid #DED6C6`), layered drop shadows, terracotta action stamps (`#C84B31`), and crisp editorial typography (`Fraunces`, `Plus Jakarta Sans`, `JetBrains Mono`).
 - **100% Real Interactive Street & Satellite Cartography**: Powered by Leaflet with instant floating layer switching between:
-  1. 🗺️ **Warm Editorial Street Map (Default)**: CARTO Voyager with warm paper sepia/contrast filter.
-  2. 🏛️ **Architectural Light Map**: CARTO Positron high-contrast cartography.
-  3. 🛰️ **Real Satellite & Mall Roof View**: Esri World Imagery high-resolution imagery.
+  1. 🗺️ **Street Map (Default)**: 100% key-free Esri World Street Map with warm paper sepia/contrast filter.
+  2. 🏛️ **Topographic Map**: Esri World Topo Map high-contrast terrain cartography.
+  3. 🛰️ **Satellite View**: Esri World Imagery high-resolution imagery.
 - **Statutory Clean-Room Data Engine**: All 120+ seeded business records, 3 state territories, 6 metro areas, and 9 sub-sub-regions (including indoor shopping mall sub-units) comply with strict federal, state, and platform legal guardrails.
 
 ---
@@ -60,20 +60,20 @@ Every data attribute and UI element is governed by four non-negotiable statutory
 
 ## 3-State Interactive Sales Workflow
 
-1. **State 1: Continental US Landing & Dossier Search**
+1. **State 1: Continental US Landing & Territory Discovery**
    - Full-bleed interactive continental US street map (`lat: 39.8283, lng: -98.5795, zoom: 4`).
    - Floating architectural folder card with tabbed header and cascading dropdowns (State &rarr; Metro &rarr; District/Mall Zone).
    - Instant smooth fly-to camera zoom into selected target coordinates.
 
 2. **State 2: 400px Left Business List Drawer**
    - Floating cardstock panel docked over the left side of the street map.
-   - Breadcrumb navigation, live search input, segmented ISP filter (*All*, *AT&T On-Net*, *Competitors*), and size tier filter chips (*Micro*, *Small*, *Medium*, *Large*).
-   - Die-cut index cards with color-coded left ribbons, mall sub-unit badges (`Level 2, Kiosk 204`), and monospace bandwidth pills.
+   - Breadcrumb navigation, live search input, segmented ISP filter (*All Businesses*, *Using AT&T*, *Target Leads*), and size tier filter chips (*Micro*, *Small*, *Medium*, *Large*).
+   - Color-coded left ribbons, mall sub-unit badges (`Level 2, Kiosk 204`), and monospace bandwidth pills.
 
-3. **State 3: 420px Adjacent Detail & Pitch Card**
-   - Floating paper dossier card docked at `left: 416px` adjacent to the left drawer.
+3. **State 3: 420px Adjacent Business Profile & Pitch Card**
+   - Floating card docked at `left: 416px` adjacent to the left drawer.
    - Outside-In Non-CPNI intelligence metrics (`modeled_bandwidth_mbps` & `modeled_monthly_tb`).
-   - Tactile Conversion Score Gauge (weighted by off-net carrier delta, FCC fiber hex, and firmographic size).
+   - Conversion Propensity Gauge (weighted by off-net carrier delta, FCC fiber hex, and firmographic size).
    - Perforated AT&T Commercial Fiber Plan Voucher Box with SLA and pricing.
    - Pre-masked Decision Maker card with interactive CRM unmasking simulation issuing live audit receipt tokens (`AUDIT-TCPA-XXXX`).
 

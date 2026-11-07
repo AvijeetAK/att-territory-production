@@ -274,7 +274,7 @@ export default function MapCanvas({
             }`}
           >
             <Compass className="w-3.5 h-3.5" />
-            <span>Editorial Street</span>
+            <span>Street Map</span>
           </button>
 
           <button
@@ -286,7 +286,7 @@ export default function MapCanvas({
             }`}
           >
             <Globe className="w-3.5 h-3.5" />
-            <span>Clean Topographic</span>
+            <span>Topographic</span>
           </button>
 
           <button
@@ -298,7 +298,7 @@ export default function MapCanvas({
             }`}
           >
             <Satellite className="w-3.5 h-3.5" />
-            <span>Real Satellite</span>
+            <span>Satellite</span>
           </button>
         </div>
       </div>

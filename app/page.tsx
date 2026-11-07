@@ -175,9 +175,6 @@ export default function AppHome() {
               <span className="font-serif font-bold text-base text-[#1C1917] tracking-tight">
                 AT&amp;T Territory Intelligence
               </span>
-              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[#E8E2D5] text-[#655E54] border border-[#DED6C6] uppercase">
-                Tactile Cartography
-              </span>
             </div>
           </div>
         </div>

@@ -90,23 +90,23 @@ export default function DetailFlyout({ business, onClose }: DetailFlyoutProps) {
 
   return (
     <div className="fixed left-[416px] top-20 bottom-4 w-[420px] bg-[#FAF7F2] border-[1.5px] border-[#DED6C6] rounded-xl shadow-cutout-lg z-30 flex flex-col overflow-hidden animate-in slide-in-from-left-4 duration-200">
-      {/* Physical Folder Header Strip */}
+      {/* Header Strip */}
       <div className="bg-[#E8E2D5] border-b-[1.5px] border-[#DED6C6] px-4 py-2 flex items-center justify-between">
         <div className="flex items-center gap-1.5 font-mono text-[10px] font-bold text-[#655E54] tracking-wider uppercase">
           <FileText className="w-3.5 h-3.5 text-[#C84B31]" />
-          <span>DOSSIER #{business.overture_gers_id.substring(0, 14)}</span>
+          <span>BUSINESS PROFILE #{business.overture_gers_id.substring(0, 14)}</span>
         </div>
 
         <button
           onClick={onClose}
           className="w-6 h-6 rounded flex items-center justify-center text-[#655E54] hover:text-[#1C1917] hover:bg-[#DED6C6] transition-colors"
-          title="Close Dossier"
+          title="Close Profile"
         >
           <X className="w-4 h-4" />
         </button>
       </div>
 
-      {/* Main Dossier Content */}
+      {/* Main Profile Content */}
       <div className="flex-1 overflow-y-auto p-5 space-y-4">
         {/* Title & POI Provenance */}
         <div>
@@ -115,10 +115,10 @@ export default function DetailFlyout({ business, onClose }: DetailFlyoutProps) {
               className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold tracking-tight uppercase border ${
                 business.is_att_customer
                   ? "bg-[#E8F4FC] text-[#0077B6] border-[#BDE0FE]"
-                  : "bg-[#E8E2D5] text-[#655E54] border-[#DED6C6]"
+                  : "bg-[#FDF2E9] text-[#C84B31] border-[#FADBD8]"
               }`}
             >
-              {business.is_att_customer ? "AT&T On-Net Customer" : "Competitor Off-Net"}
+              {business.is_att_customer ? "AT&T CONNECTED" : "TARGET LEAD"}
             </span>
 
             <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#E8E2D5] text-[#1C1917] border border-[#DED6C6]">

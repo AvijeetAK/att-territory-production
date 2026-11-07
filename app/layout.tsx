@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "AT&T Territory Intelligence Platform | Tactile Architectural Cartography",
+  title: "AT&T Territory Intelligence Platform | B2B Commercial Footprint",
   description: "Enterprise geospatial B2B telecom sales intelligence and outside-in fiber conversion prospecting.",
 };
 

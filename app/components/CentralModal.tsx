@@ -69,12 +69,12 @@ export default function CentralModal({ hierarchy, onAnalyzeTerritory }: CentralM
   return (
     <div className="absolute inset-0 flex items-center justify-center p-4 z-40 bg-[#1C1917]/25 backdrop-blur-[2px]">
       <div className="w-full max-w-xl animate-in fade-in zoom-in-95 duration-200">
-        {/* Physical Top Folder Tab */}
+        {/* Top Header Tab */}
         <div className="flex items-center ml-2">
           <div className="bg-[#E8E2D5] border-t-[1.5px] border-l-[1.5px] border-r-[1.5px] border-[#DED6C6] px-5 py-2 rounded-t-lg flex items-center gap-2 shadow-sm">
             <span className="w-2.5 h-2.5 rounded-full bg-[#C84B31]"></span>
             <span className="font-mono text-[11px] font-bold tracking-wider text-[#655E54] uppercase">
-              TERRITORY DOSSIER • ARCHITECTURAL SURVEY #AT-2026
+              COMMERCIAL TERRITORY DISCOVERY #AT-2026
             </span>
           </div>
         </div>
